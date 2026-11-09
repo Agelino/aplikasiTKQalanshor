@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Remix Remix SIM TK Ceria Bangsa",
+  "description": "Sistem Informasi Manajemen TK dan Pembelajaran Terintegrasi (Kurikulum, Prosem, RPPM, RPPH, Penilaian, dan Rapor)",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
