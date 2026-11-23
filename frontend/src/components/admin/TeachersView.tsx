@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
+import { api } from '../../services/api';
 import { Teacher } from '../../types';
 import {
   Users,
@@ -113,18 +114,19 @@ export const TeachersView: React.FC = () => {
     updateTeacher({ ...t, status: updatedStatus });
   };
 
-  const handleSignatureUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSignatureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 3 * 1024 * 1024) {
         alert('Ukuran file foto tanda tangan maksimal 3MB.');
         return;
       }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, signatureImage: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
+      try {
+        const uploaded = await api.uploadFile(file, 'teacher-signatures');
+        setFormData(prev => ({ ...prev, signatureImage: uploaded.url }));
+      } catch (error) {
+        alert(error instanceof Error ? error.message : 'Upload tanda tangan gagal.');
+      }
     }
   };
 

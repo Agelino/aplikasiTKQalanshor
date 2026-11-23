@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
+import { api } from '../../services/api';
 import {
   RombelChatMessage,
   RombelMeeting,
@@ -201,7 +202,7 @@ export const RombelForumView: React.FC<RombelForumViewProps> = ({ mode }) => {
   }, [activeMeeting, isVideoOn]);
 
   // Handle Photo Attachment for Forum Chat
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -210,15 +211,14 @@ export const RombelForumView: React.FC<RombelForumViewProps> = ({ mode }) => {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = event => {
-      if (typeof event.target?.result === 'string') {
-        setAttachmentUrl(event.target.result);
-        setAttachmentName(file.name);
-        showToast('Foto Terlampir', 'Foto siap dikirim bersama pesan.', 'info');
-      }
-    };
-    reader.readAsDataURL(file);
+    try {
+      const uploaded = await api.uploadFile(file, 'rombel-forum');
+      setAttachmentUrl(uploaded.url);
+      setAttachmentName(file.name);
+      showToast('Foto Terlampir', 'Foto siap dikirim bersama pesan.', 'info');
+    } catch (error) {
+      showToast('Upload Gagal', error instanceof Error ? error.message : 'Foto tidak dapat diunggah.', 'error');
+    }
   };
 
   // Preset sample image options for quick test

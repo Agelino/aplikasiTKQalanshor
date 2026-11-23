@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
+import { api } from '../../services/api';
 import { AttendanceRecord, AttendanceStatus } from '../../types';
 import {
   CheckCircle2,
@@ -100,7 +101,7 @@ export const StudentAttendanceView: React.FC = () => {
     setIsLeaveModalOpen(true);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -110,15 +111,15 @@ export const StudentAttendanceView: React.FC = () => {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (loadEvt) => {
-      const dataUrl = loadEvt.target?.result as string;
-      setAttachmentUrl(dataUrl);
+    try {
+      const uploaded = await api.uploadFile(file, 'attendance-attachments');
+      setAttachmentUrl(uploaded.url);
       setAttachmentName(file.name);
-      setAttachmentType(file.type || 'image/png');
+      setAttachmentType(uploaded.type);
       showToast('File Terlampir', `File ${file.name} berhasil diunggah.`, 'info');
-    };
-    reader.readAsDataURL(file);
+    } catch (error) {
+      showToast('Upload Gagal', error instanceof Error ? error.message : 'File tidak dapat diunggah.', 'error');
+    }
   };
 
   const handleRemoveAttachment = () => {

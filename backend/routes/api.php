@@ -3,7 +3,13 @@
 use App\Http\Controllers\Api\SchoolDataController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/health', fn () => response()->json([
+    'status' => 'ok',
+    'service' => 'tkq-backend',
+]));
+
 Route::prefix('v1')->group(function () {
+    Route::post('/uploads', [SchoolDataController::class, 'upload']);
     Route::get('/bootstrap', [SchoolDataController::class, 'bootstrap']);
     Route::get('/state', [SchoolDataController::class, 'state']);
     Route::put('/state/{key}', [SchoolDataController::class, 'saveState']);

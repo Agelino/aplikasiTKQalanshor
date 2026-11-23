@@ -1,9 +1,12 @@
 import { Student, Teacher, User } from '../types';
 
-const browserApiUrl = typeof window !== 'undefined'
-  ? `http://${window.location.hostname}:8000/api/v1`
-  : 'http://127.0.0.1:8000/api/v1';
-const API_URL = (import.meta.env.VITE_API_URL || browserApiUrl).replace(/\/$/, '');
+const configuredApiUrl = import.meta.env.VITE_API_URL?.trim();
+const localApiUrl = 'http://127.0.0.1:8000/api/v1';
+const API_URL = (configuredApiUrl || (import.meta.env.DEV ? localApiUrl : '')).replace(/\/$/, '');
+
+if (!API_URL) {
+  throw new Error('VITE_API_URL wajib diatur pada environment production.');
+}
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
@@ -25,6 +28,20 @@ export interface BootstrapData {
 }
 
 export const api = {
+  uploadFile: async (file: File, category: string) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('category', category);
+    const response = await fetch(`${API_URL}/uploads`, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new Error(body.message || `File upload failed (${response.status})`);
+    }
+    return response.json() as Promise<{ url: string; path: string; name: string; type: string }>;
+  },
   resources: () => request<Record<string, unknown[]>>('/resources'),
   resource: (resource: string) => request<unknown[]>(`/resources/${encodeURIComponent(resource)}`),
   replaceResource: (resource: string, items: unknown[]) =>

@@ -230,7 +230,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [classes, setClasses] = useState<ClassRoom[]>([]);
   const [rombels, setRombels] = useState<Rombel[]>([]);
 
-  const [academicYear, setAcademicYear] = useState<AcademicYear>({ semesters: [] } as AcademicYear);
+  const [academicYear, setAcademicYear] = useState<AcademicYear>({
+    id: '',
+    name: '',
+    status: 'Arsip',
+    semesters: [],
+  });
   const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>([]);
 
   // User Accounts State
@@ -243,7 +248,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [govCurriculum, setGovCurriculum] = useState<GovCurriculumItem[]>([]);
   const [tkCurriculum, setTkCurriculum] = useState<TkCurriculumItem[]>([]);
-  const [activeCurriculum, setActiveCurriculum] = useState<ActiveCurriculum>({ components: [] } as ActiveCurriculum);
+  const [activeCurriculum, setActiveCurriculum] = useState<ActiveCurriculum>({
+    id: '',
+    name: '',
+    academicYear: '',
+    semester: '',
+    status: 'Draft',
+    lastUpdated: '',
+    sourcesIncluded: [],
+    components: [],
+  });
   const [materialBank, setMaterialBank] = useState<MaterialBankItem[]>([]);
   const [activityBank, setActivityBank] = useState<ActivityBankItem[]>([]);
 
@@ -288,7 +302,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setStudents(list<Student>('students'));
       setClasses(list<ClassRoom>('classes'));
       setRombels(list<Rombel>('rombels'));
-      setAcademicYear(first('academic_year', { semesters: [] } as AcademicYear));
+      setAcademicYear(first<AcademicYear>('academic_year', {
+        id: '',
+        name: '',
+        status: 'Arsip',
+        semesters: [],
+      }));
       setCalendarEvents(list<CalendarEvent>('calendar_events'));
       setUsers(list<User>('users'));
       setLearningElements(list<LearningElement>('learning_elements'));
@@ -296,7 +315,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setTpList(list<TujuanPembelajaran>('tp_list'));
       setGovCurriculum(list<GovCurriculumItem>('gov_curriculum'));
       setTkCurriculum(list<TkCurriculumItem>('tk_curriculum'));
-      setActiveCurriculum(first('active_curriculum', { components: [] } as ActiveCurriculum));
+      setActiveCurriculum(first<ActiveCurriculum>('active_curriculum', {
+        id: '',
+        name: '',
+        academicYear: '',
+        semester: '',
+        status: 'Draft',
+        lastUpdated: '',
+        sourcesIncluded: [],
+        components: [],
+      }));
       setMaterialBank(list<MaterialBankItem>('material_bank'));
       setActivityBank(list<ActivityBankItem>('activity_bank'));
       setProsemList(list<ProsemItem>('prosem_list'));

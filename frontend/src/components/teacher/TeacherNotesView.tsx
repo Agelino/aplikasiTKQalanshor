@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
+import { api } from '../../services/api';
 import {
   TeacherPersonalNote,
   TeacherNoteCategory,
@@ -180,7 +181,7 @@ export const TeacherNotesView: React.FC = () => {
   };
 
   // Handle Photo File Upload (Convert to Base64 data URL)
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -195,17 +196,16 @@ export const TeacherNotesView: React.FC = () => {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = event => {
-      if (typeof event.target?.result === 'string') {
-        setFormPhotoUrl(event.target.result);
-        if (!formPhotoCaption) {
-          setFormPhotoCaption(`Dokumentasi ananda tanggal ${formDate}`);
-        }
-        showToast('Foto Terlampir', 'Foto dokumentasi berhasil diunggah.', 'info');
+    try {
+      const uploaded = await api.uploadFile(file, 'teacher-notes');
+      setFormPhotoUrl(uploaded.url);
+      if (!formPhotoCaption) {
+        setFormPhotoCaption(`Dokumentasi ananda tanggal ${formDate}`);
       }
-    };
-    reader.readAsDataURL(file);
+      showToast('Foto Terlampir', 'Foto dokumentasi berhasil diunggah.', 'info');
+    } catch (error) {
+      showToast('Upload Gagal', error instanceof Error ? error.message : 'Foto tidak dapat diunggah.', 'error');
+    }
   };
 
   // Preset sample photos

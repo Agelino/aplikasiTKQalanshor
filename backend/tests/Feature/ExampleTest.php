@@ -16,4 +16,23 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_the_api_health_endpoint_returns_ok(): void
+    {
+        $response = $this->get('/api/health');
+
+        $response->assertOk();
+        $response->assertJson([
+            'status' => 'ok',
+            'service' => 'tkq-backend',
+        ]);
+    }
+
+    public function test_upload_requires_a_supported_file(): void
+    {
+        $response = $this->postJson('/api/v1/uploads', []);
+
+        $response->assertUnprocessable();
+        $response->assertJsonValidationErrors('file');
+    }
 }

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::query()->delete();
+        $demoPassword = (string) env('DEMO_PASSWORD', 'password');
 
         $adminAccounts = [
             ['admin', 'Admin Utama', 'admin@tkqpro.sch.id'],
@@ -33,7 +34,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin',
                 'teacher_id' => null,
                 'student_id' => null,
-                'password' => Hash::make('password'),
+                'password' => Hash::make($demoPassword),
             ]);
         }
 
@@ -52,7 +53,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'guru',
                 'teacher_id' => $teacherId,
                 'student_id' => null,
-                'password' => Hash::make('password'),
+                'password' => Hash::make($demoPassword),
             ]);
         }
 
@@ -76,7 +77,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'murid',
                 'teacher_id' => null,
                 'student_id' => $studentId,
-                'password' => Hash::make('password'),
+                'password' => Hash::make($demoPassword),
             ]);
         }
 

@@ -12,11 +12,37 @@ use App\Models\Teacher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class SchoolDataController extends Controller
 {
     private const RESOURCE_PATTERN = '/^[a-z][a-z0-9_]{1,79}$/';
+
+    public function upload(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'file' => ['required', 'file', 'max:5120', 'mimes:jpg,jpeg,png,webp,pdf'],
+            'category' => ['nullable', 'string', 'max:40', 'regex:/^[a-z0-9_-]+$/'],
+        ]);
+
+        $category = $data['category'] ?? 'uploads';
+        $disk = Storage::disk(config('filesystems.default'));
+        $path = $disk->putFile(
+            $category.'/'.date('Y/m'),
+            $data['file'],
+            ['visibility' => 'public']
+        );
+
+        abort_if($path === false, 500, 'File storage failed.');
+
+        return response()->json([
+            'url' => $disk->url($path),
+            'path' => $path,
+            'name' => $data['file']->getClientOriginalName(),
+            'type' => $data['file']->getClientMimeType(),
+        ], 201);
+    }
 
     public function resources(): JsonResponse
     {
