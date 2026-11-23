@@ -72,17 +72,17 @@ export const AdminDashboard: React.FC = () => {
     return (
       <div className="space-y-6">
         {/* Welcome Banner for Teacher */}
-        <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="surface-card p-6 border-l-4 border-l-[#059669] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-1">
+            <div className="flex items-center gap-2 text-[#059669] text-xs font-semibold uppercase tracking-wider mb-1">
               <Sparkles className="w-4 h-4" />
               <span>Portal Guru & Wali Rombel</span>
             </div>
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight">
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[#172B45]">
               Selamat Datang, {currentTeacher?.name || 'Ibu Guru'}!
             </h2>
-            <p className="text-xs md:text-sm text-emerald-100/90 mt-1">
-              Wali <span className="font-bold text-white">{currentRombel?.fullName || 'Rombel'}</span> ({currentClass?.name || 'Kelas'}) · Tahun Ajaran <span className="font-semibold text-white">{academicYear.name}</span> · {activeSemester}
+            <p className="text-xs md:text-sm text-[#64748B] mt-1">
+              Wali <span className="font-semibold text-[#172B45]">{currentRombel?.fullName || 'Rombel'}</span> ({currentClass?.name || 'Kelas'}) · Tahun Ajaran <span className="font-semibold text-[#172B45]">{academicYear.name}</span> · {activeSemester}
             </p>
           </div>
 
@@ -99,7 +99,7 @@ export const AdminDashboard: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('absensi')}
-              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-white text-emerald-900 font-bold text-xs shadow-md hover:bg-emerald-50 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-white text-emerald-900 font-bold text-xs shadow-md hover:bg-emerald-50 transition-all cursor-pointer"
             >
               <CheckCircle2 className="w-4 h-4 text-emerald-700" />
               <span>Catat Absensi Rombel</span>
@@ -376,24 +376,24 @@ export const AdminDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Banner / Welcome */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="surface-card p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-1">
+          <div className="flex items-center gap-2 text-[#059669] text-[11px] font-semibold tracking-wide mb-1.5">
             <Sparkles className="w-4 h-4" />
             Dashboard Administrasi & Tata Usaha
           </div>
-          <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-            Selamat Datang di SIM TK Ceria Bangsa
+          <h2 className="text-xl md:text-[22px] font-semibold tracking-tight text-[#172B45]">
+            Selamat Datang di TKQ Pro
           </h2>
-          <p className="text-xs md:text-sm text-emerald-100/80 mt-1 max-w-xl">
-            Tahun Ajaran <span className="font-semibold text-white">{academicYear.name}</span> · {activeSemester} Aktif · Kurikulum Terpadu Merdeka & TKQ.
+          <p className="text-xs md:text-sm text-[#64748B] mt-1 max-w-xl">
+            Tahun Ajaran <span className="font-semibold text-[#172B45]">{academicYear.name}</span> · {activeSemester} Aktif · Kurikulum Terpadu Merdeka & TKQ.
           </p>
         </div>
 
         {/* Quick Shortcut to Curriculum Builder */}
         <button
           onClick={() => setActiveTab('curriculum_builder')}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-emerald-900 font-semibold text-xs shadow-md hover:bg-emerald-50 transition-all shrink-0"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-[#172B45] font-semibold text-xs border border-[#E2E8F0] hover:border-[#059669]/40 hover:bg-[#ECFDF5] transition-colors shrink-0"
         >
           <BookOpen className="w-4 h-4 text-emerald-700" />
           <span>Curriculum Builder</span>
@@ -401,173 +401,120 @@ export const AdminDashboard: React.FC = () => {
         </button>
       </div>
 
-      {/* 8 Metric Cards Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+      {/* 4 KPI utama (design.md: satu gaya visual, angka paling menonjol) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div
-          onClick={() => setActiveTab('guru')}
-          className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 hover:shadow-sm transition-all cursor-pointer"
+          onClick={() => setActiveTab('murid')}
+          className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] hover:border-[#059669]/40 transition-colors cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-medium">Total Guru</span>
-            <Users className="w-4 h-4 text-blue-500" />
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-[13px] font-medium text-[#64748B]">Total Murid</p>
+            <span className="w-8 h-8 rounded-lg bg-[#ECFDF5] text-[#059669] flex items-center justify-center shrink-0">
+              <GraduationCap className="w-4 h-4" />
+            </span>
           </div>
-          <p className="text-xl font-bold text-slate-900 tabular-nums">{totalGuru}</p>
-          <p className="text-[10px] text-emerald-600 mt-1 font-medium">Semua Aktif</p>
+          <p className="mt-3 text-[28px] leading-none font-semibold text-[#172B45] tabular-nums">{totalMurid}</p>
+          <p className="mt-2 text-xs text-[#64748B]">Peserta didik terdaftar</p>
         </div>
 
         <div
-          onClick={() => setActiveTab('murid')}
-          className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 hover:shadow-sm transition-all cursor-pointer"
+          onClick={() => setActiveTab('guru')}
+          className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] hover:border-[#059669]/40 transition-colors cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-medium">Total Murid</span>
-            <GraduationCap className="w-4 h-4 text-emerald-500" />
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-[13px] font-medium text-[#64748B]">Total Guru</p>
+            <span className="w-8 h-8 rounded-lg bg-[#ECFDF5] text-[#059669] flex items-center justify-center shrink-0">
+              <Users className="w-4 h-4" />
+            </span>
           </div>
-          <p className="text-xl font-bold text-slate-900 tabular-nums">{totalMurid}</p>
-          <p className="text-[10px] text-slate-500 mt-1">2 Kelompok</p>
+          <p className="mt-3 text-[28px] leading-none font-semibold text-[#172B45] tabular-nums">{totalGuru}</p>
+          <p className="mt-2 text-xs text-[#64748B]">Pendidik & tenaga pengajar</p>
         </div>
 
         <div
           onClick={() => setActiveTab('kelas')}
-          className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 hover:shadow-sm transition-all cursor-pointer"
+          className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] hover:border-[#059669]/40 transition-colors cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-medium">Total Kelas</span>
-            <School className="w-4 h-4 text-amber-500" />
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-[13px] font-medium text-[#64748B]">Total Kelas</p>
+            <span className="w-8 h-8 rounded-lg bg-[#ECFDF5] text-[#059669] flex items-center justify-center shrink-0">
+              <School className="w-4 h-4" />
+            </span>
           </div>
-          <p className="text-xl font-bold text-slate-900 tabular-nums">{totalKelas}</p>
-          <p className="text-[10px] text-slate-500 mt-1">A (4-5) & B (5-6)</p>
+          <p className="mt-3 text-[28px] leading-none font-semibold text-[#172B45] tabular-nums">{totalKelas}</p>
+          <p className="mt-2 text-xs text-[#64748B]">Rombongan belajar aktif</p>
         </div>
 
         <div
-          onClick={() => setActiveTab('tahun_ajaran')}
-          className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 hover:shadow-sm transition-all cursor-pointer"
+          onClick={() => setActiveTab('kalender')}
+          className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] hover:border-[#059669]/40 transition-colors cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-medium truncate">Tahun Ajaran</span>
-            <CalendarRange className="w-4 h-4 text-purple-500" />
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-[13px] font-medium text-[#64748B]">Kegiatan Aktif</p>
+            <span className="w-8 h-8 rounded-lg bg-[#ECFDF5] text-[#059669] flex items-center justify-center shrink-0">
+              <CalendarDays className="w-4 h-4" />
+            </span>
           </div>
-          <p className="text-sm font-bold text-slate-900 truncate tabular-nums">{academicYear.name}</p>
-          <p className="text-[10px] text-emerald-600 mt-1 font-medium">Status Aktif</p>
-        </div>
-
-        <div
-          onClick={() => setActiveTab('tahun_ajaran')}
-          className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 hover:shadow-sm transition-all cursor-pointer"
-        >
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-medium">Semester</span>
-            <CalendarRange className="w-4 h-4 text-indigo-500" />
-          </div>
-          <p className="text-sm font-bold text-slate-900 truncate">{activeSemester}</p>
-          <p className="text-[10px] text-slate-500 mt-1">Ganjil 2026</p>
-        </div>
-
-        <div
-          onClick={() => setActiveTab('kurikulum_aktif')}
-          className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 hover:shadow-sm transition-all cursor-pointer"
-        >
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-medium truncate">Kurikulum</span>
-            <BookOpen className="w-4 h-4 text-teal-500" />
-          </div>
-          <p className="text-sm font-bold text-slate-900 truncate">{activeCurriculum.status}</p>
-          <p className="text-[10px] text-teal-600 mt-1 font-medium">{activeCurriculum.components.length} Komponen</p>
-        </div>
-
-        <div
-          onClick={() => setActiveTab('rppm')}
-          className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 hover:shadow-sm transition-all cursor-pointer"
-        >
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-medium">RPPM</span>
-            <ClipboardList className="w-4 h-4 text-rose-500" />
-          </div>
-          <p className="text-xl font-bold text-slate-900 tabular-nums">{totalRppm}</p>
-          <p className="text-[10px] text-slate-500 mt-1">Pekan 1-4</p>
-        </div>
-
-        <div
-          onClick={() => setActiveTab('rpph')}
-          className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-xs hover:border-emerald-300 hover:shadow-sm transition-all cursor-pointer"
-        >
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-medium">RPPH</span>
-            <FileText className="w-4 h-4 text-sky-500" />
-          </div>
-          <p className="text-xl font-bold text-slate-900 tabular-nums">{totalRpph}</p>
-          <p className="text-[10px] text-sky-600 mt-1 font-medium">Otomatis Terisi</p>
+          <p className="mt-3 text-[28px] leading-none font-semibold text-[#172B45] tabular-nums">
+            {calendarEvents.filter(event => event.type !== 'holiday').length}
+          </p>
+          <p className="mt-2 text-xs text-[#64748B]">Agenda akademik terjadwal</p>
         </div>
       </div>
 
-      {/* Quick Action Ribbon */}
-      <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
-        <p className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">
-          Aksi Cepat Manajemen & Pembelajaran
-        </p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-          <button
-            onClick={() => setActiveTab('murid')}
-            className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200/80 text-xs font-semibold text-slate-700 transition-all text-left"
-          >
-            <UserPlus className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span className="truncate">Tambah Murid</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('guru')}
-            className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 hover:bg-blue-50 hover:text-blue-800 border border-slate-200/80 text-xs font-semibold text-slate-700 transition-all text-left"
-          >
-            <PlusCircle className="w-4 h-4 text-blue-600 shrink-0" />
-            <span className="truncate">Data Guru</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('absensi_guru')}
-            className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:text-indigo-800 border border-slate-200/80 text-xs font-semibold text-slate-700 transition-all text-left"
-          >
-            <UserCheck className="w-4 h-4 text-indigo-600 shrink-0" />
-            <span className="truncate">Absensi Guru (TU)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('curriculum_builder')}
-            className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 hover:bg-purple-50 hover:text-purple-800 border border-slate-200/80 text-xs font-semibold text-slate-700 transition-all text-left"
-          >
-            <BookOpen className="w-4 h-4 text-purple-600 shrink-0" />
-            <span className="truncate">Buat Kurikulum</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('prosem')}
-            className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 hover:bg-teal-50 hover:text-teal-800 border border-slate-200/80 text-xs font-semibold text-slate-700 transition-all text-left"
-          >
-            <CalendarRange className="w-4 h-4 text-teal-600 shrink-0" />
-            <span className="truncate">Buat Prosem</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('rppm')}
-            className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 hover:text-amber-800 border border-slate-200/80 text-xs font-semibold text-slate-700 transition-all text-left"
-          >
-            <ClipboardList className="w-4 h-4 text-amber-600 shrink-0" />
-            <span className="truncate">Lihat RPPM</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('rpph')}
-            className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 hover:bg-indigo-50 hover:text-indigo-800 border border-slate-200/80 text-xs font-semibold text-slate-700 transition-all text-left"
-          >
-            <FileText className="w-4 h-4 text-indigo-600 shrink-0" />
-            <span className="truncate">Lihat RPPH</span>
-          </button>
+      {/* Ringkasan Akademik: data real, satu panel tanpa kartu berwarna */}
+      <div className="surface-card px-5 py-4">
+        <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:gap-6">
+          <p className="text-[11px] font-semibold tracking-wide text-[#94A3B8] shrink-0">
+            Ringkasan Akademik
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-2 flex-1">
+            {[
+              { label: 'RPPM tersusun', value: totalRppm },
+              { label: 'RPPH tersusun', value: totalRpph },
+              { label: 'Kehadiran', value: `${hadirPct}%` },
+              { label: 'Asesmen tercatat', value: assessmentList.length },
+              { label: 'Capaian BSB', value: `${bsbPct}%` },
+              { label: 'Komponen kurikulum', value: activeCurriculum.components.length },
+            ].map(item => (
+              <div key={item.label} className="flex items-baseline gap-2 min-w-0">
+                <span className="text-base font-semibold text-[#172B45] tabular-nums">{item.value}</span>
+                <span className="text-xs text-[#64748B] truncate">{item.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* 3 Main Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      {/* Quick Actions (maks 4, satu gaya visual) */}
+      <div className="surface-card p-5">
+        <div className="mb-4">
+          <h3 className="text-sm font-semibold text-[#172B45]">Aksi Cepat</h3>
+          <p className="text-xs text-[#64748B] mt-0.5">Tugas administrasi yang paling sering digunakan</p>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {[
+            { id: 'murid', label: 'Tambah Murid', icon: <UserPlus className="w-4 h-4" /> },
+            { id: 'kelas', label: 'Kelola Kelas', icon: <School className="w-4 h-4" /> },
+            { id: 'rpph', label: 'Susun RPPH', icon: <FileText className="w-4 h-4" /> },
+            { id: 'kalender', label: 'Kalender Akademik', icon: <CalendarDays className="w-4 h-4" /> },
+          ].map(action => (
+            <button
+              key={action.id}
+              onClick={() => setActiveTab(action.id)}
+              className="flex items-center gap-2.5 px-3.5 min-h-10 py-2.5 rounded-xl bg-white border border-[#E2E8F0] text-[13px] font-medium text-[#172B45] text-left hover:border-[#059669]/40 hover:bg-[#ECFDF5] transition-colors"
+            >
+              <span className="text-[#059669] shrink-0">{action.icon}</span>
+              <span className="truncate">{action.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 2 grafik utama (design.md §6.3) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Chart 1: Jumlah Murid Berdasarkan Kelas */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1">
               <h3 className="text-sm font-bold text-slate-900">Grafik Jumlah Murid</h3>
@@ -613,7 +560,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Chart 2: Grafik Kehadiran */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1">
               <h3 className="text-sm font-bold text-slate-900">Grafik Kehadiran</h3>
@@ -654,68 +601,10 @@ export const AdminDashboard: React.FC = () => {
             <span className="font-bold text-emerald-600">{hadirPct}% (Sangat Baik)</span>
           </div>
         </div>
-
-        {/* Chart 3: Grafik Perkembangan Anak (BB, MB, BSH, BSB) */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <h3 className="text-sm font-bold text-slate-900">Grafik Perkembangan Anak</h3>
-              <TrendingUp className="w-4 h-4 text-slate-400" />
-            </div>
-            <p className="text-xs text-slate-500 mb-4">Distribusi capaian asesmen formatif 4 skala</p>
-
-            <div className="space-y-2.5">
-              <div>
-                <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
-                  <span>BSB (Berkembang Sangat Baik)</span>
-                  <span className="tabular-nums font-bold text-emerald-700">{bsbCount} ({bsbPct}%)</span>
-                </div>
-                <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${bsbPct}%` }} />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
-                  <span>BSH (Berkembang Sesuai Harapan)</span>
-                  <span className="tabular-nums font-bold text-teal-700">{bshCount} ({bshPct}%)</span>
-                </div>
-                <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-teal-500 rounded-full" style={{ width: `${bshPct}%` }} />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
-                  <span>MB (Mulai Berkembang)</span>
-                  <span className="tabular-nums font-bold text-amber-700">{mbCount} ({mbPct}%)</span>
-                </div>
-                <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-amber-400 rounded-full" style={{ width: `${mbPct}%` }} />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
-                  <span>BB (Belum Berkembang)</span>
-                  <span className="tabular-nums font-bold text-rose-700">{bbCount} ({bbPct}%)</span>
-                </div>
-                <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-rose-400 rounded-full" style={{ width: `${bbPct}%` }} />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Total Observasi Tercatat:</span>
-            <span className="font-semibold text-slate-800">{assessmentList.length} Penilaian</span>
-          </div>
-        </div>
       </div>
 
       {/* Synchronized Kalender Akademik Section */}
-      <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-4">
+      <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)] space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold">
@@ -779,7 +668,7 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Recent Activities Section */}
-      <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
+      <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] shadow-[0_2px_8px_rgba(15,23,42,0.04)]">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4 text-emerald-600" />

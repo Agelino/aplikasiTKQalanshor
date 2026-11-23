@@ -86,7 +86,7 @@ export const InputNilaiRaporView: React.FC = () => {
     );
     if (existing) return existing;
 
-    // Default template for TK Ceria Bangsa / PAUD Kurikulum Merdeka & TKQ
+    // Default template for TKQ Pro / PAUD Kurikulum Merdeka & TKQ
     return {
       id: `rapor-${student.id}`,
       academicYear: selectedAcademicYear,
@@ -156,7 +156,7 @@ export const InputNilaiRaporView: React.FC = () => {
       },
       p5Report: {
         tema: 'Aku Sayang Bumi (Apotek Hidup & Sahabat Tanaman)',
-        subtema: 'Merawat Kebun Tanaman Hijau TK Ceria Bangsa',
+        subtema: 'Merawat Kebun Tanaman Hijau TKQ Pro',
         predikat: 'BSB',
         stars: 4,
         narasi: `Ananda berpartisipasi aktif dalam kegiatan menanam bibit tanaman, menyiram secara rutin, dan bekerja sama dengan riang bersama teman sekelas.`,

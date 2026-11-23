@@ -33,37 +33,6 @@ import {
   RombelMeeting,
   MeetingParticipant,
 } from '../types';
-import {
-  INITIAL_SCHOOL_PROFILE,
-  INITIAL_USERS,
-  INITIAL_TEACHERS,
-  INITIAL_CLASSES,
-  INITIAL_ROMBELS,
-  INITIAL_STUDENTS,
-  INITIAL_ACADEMIC_YEAR,
-  INITIAL_CALENDAR_EVENTS,
-  INITIAL_LEARNING_ELEMENTS,
-  INITIAL_CP_LIST,
-  INITIAL_TP_LIST,
-  INITIAL_GOV_CURRICULUM,
-  INITIAL_TK_CURRICULUM,
-  INITIAL_ACTIVE_CURRICULUM,
-  INITIAL_MATERIAL_BANK,
-  INITIAL_ACTIVITY_BANK,
-  INITIAL_PROSEM,
-  INITIAL_RPPM,
-  INITIAL_RPPH,
-  INITIAL_ATTENDANCE,
-  INITIAL_TEACHER_ATTENDANCE,
-  INITIAL_ASSESSMENTS,
-  INITIAL_REPORT_CARDS,
-  INITIAL_ANNOUNCEMENTS,
-  INITIAL_ACTIVITY_LOGS,
-  INITIAL_NOTIFICATIONS,
-} from '../data/initialData';
-import { OFFICIAL_ADMIN_RPPM_TEMPLATE } from '../data/rppmTemplateData';
-import { INITIAL_TEACHER_NOTES } from '../data/teacherNotesData';
-import { INITIAL_ROMBEL_CHATS, INITIAL_ROMBEL_MEETINGS } from '../data/rombelForumData';
 import { api } from '../services/api';
 
 export interface ToastMessage {
@@ -80,7 +49,6 @@ interface AppContextType {
   setActiveTab: (tab: string) => void;
   login: (username: string, pass: string) => Promise<boolean>;
   logout: () => void;
-  switchRole: (role: Role) => void;
 
   // Scoped Teacher & Rombel Data Context
   currentTeacher: Teacher | null;
@@ -88,11 +56,9 @@ interface AppContextType {
   currentClass: ClassRoom | null;
   accessibleStudents: Student[];
   accessibleRombels: Rombel[];
-  switchTeacher: (teacherId: string) => void;
 
   // Scoped Student (Murid / Wali Murid) Data Context
   currentStudent: Student | null;
-  switchStudent: (studentId: string) => void;
   
   // Data State
   schoolProfile: SchoolProfile;
@@ -151,7 +117,6 @@ interface AppContextType {
   addTP: (tp: Omit<TujuanPembelajaran, 'id'>) => void;
   updateTP: (tp: TujuanPembelajaran) => void;
   deleteTP: (id: string) => void;
-  resetCPTPToDefault: () => void;
   
   activeCurriculum: ActiveCurriculum;
   saveActiveCurriculum: (curriculum: ActiveCurriculum) => void;
@@ -172,7 +137,6 @@ interface AppContextType {
   addRPPMItem: (item: Omit<RPPMItem, 'id'>) => void;
   updateRPPMItem: (item: RPPMItem) => void;
   deleteRPPMItem: (id: string) => void;
-  resetRPPMToAdminTemplate: (rppmId: string) => void;
   
   rpphList: RPPHItem[];
   saveRPPH: (rpph: RPPHItem) => void;
@@ -242,7 +206,14 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Authentication & session
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    try {
+      const savedUser = localStorage.getItem('tkq_session_user');
+      return savedUser ? JSON.parse(savedUser) as User : null;
+    } catch {
+      return null;
+    }
+  });
 
   const [currentRole, setCurrentRole] = useState<Role>(() => {
     return currentUser ? currentUser.role : 'admin';
@@ -259,7 +230,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [classes, setClasses] = useState<ClassRoom[]>([]);
   const [rombels, setRombels] = useState<Rombel[]>([]);
 
-  const [academicYear, setAcademicYear] = useState<AcademicYear>({ ...INITIAL_ACADEMIC_YEAR, semesters: [] });
+  const [academicYear, setAcademicYear] = useState<AcademicYear>({ semesters: [] } as AcademicYear);
   const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>([]);
 
   // User Accounts State
@@ -272,7 +243,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [govCurriculum, setGovCurriculum] = useState<GovCurriculumItem[]>([]);
   const [tkCurriculum, setTkCurriculum] = useState<TkCurriculumItem[]>([]);
-  const [activeCurriculum, setActiveCurriculum] = useState<ActiveCurriculum>({ ...INITIAL_ACTIVE_CURRICULUM, components: [] });
+  const [activeCurriculum, setActiveCurriculum] = useState<ActiveCurriculum>({ components: [] } as ActiveCurriculum);
   const [materialBank, setMaterialBank] = useState<MaterialBankItem[]>([]);
   const [activityBank, setActivityBank] = useState<ActivityBankItem[]>([]);
 
@@ -317,7 +288,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setStudents(list<Student>('students'));
       setClasses(list<ClassRoom>('classes'));
       setRombels(list<Rombel>('rombels'));
-      setAcademicYear(first('academic_year', { ...INITIAL_ACADEMIC_YEAR, semesters: [] }));
+      setAcademicYear(first('academic_year', { semesters: [] } as AcademicYear));
       setCalendarEvents(list<CalendarEvent>('calendar_events'));
       setUsers(list<User>('users'));
       setLearningElements(list<LearningElement>('learning_elements'));
@@ -325,7 +296,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setTpList(list<TujuanPembelajaran>('tp_list'));
       setGovCurriculum(list<GovCurriculumItem>('gov_curriculum'));
       setTkCurriculum(list<TkCurriculumItem>('tk_curriculum'));
-      setActiveCurriculum(first('active_curriculum', { ...INITIAL_ACTIVE_CURRICULUM, components: [] }));
+      setActiveCurriculum(first('active_curriculum', { components: [] } as ActiveCurriculum));
       setMaterialBank(list<MaterialBankItem>('material_bank'));
       setActivityBank(list<ActivityBankItem>('activity_bank'));
       setProsemList(list<ProsemItem>('prosem_list'));
@@ -471,29 +442,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return rombels;
   }, [currentRole, currentRombel, rombels]);
 
-  const switchTeacher = (teacherId: string) => {
-    const t = teachers.find(item => item.id === teacherId);
-    if (t) {
-      const targetRombel = rombels.find(r => r.teacherId === t.id);
-      const newUser: User = {
-        id: `user-${t.id}`,
-        username: t.username,
-        name: t.name,
-        role: 'guru',
-        teacherId: t.id,
-        email: t.email,
-      };
-      setCurrentUser(newUser);
-      setCurrentRole('guru');
-      showToast(
-        'Guru & Rombel Aktif Diubah',
-        `Sekarang mengelola: ${t.name} (${targetRombel?.fullName || t.position})`,
-        'success'
-      );
-      addLog(`Beralih akun ke ${t.name} - ${targetRombel?.fullName || t.position}`, 'Autentikasi');
-    }
-  };
-
   // Scoped Student (Murid / Wali Murid) State
   const currentStudent: Student | null = React.useMemo(() => {
     if (currentRole !== 'murid') return null;
@@ -513,34 +461,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return students.find(s => s.id === 'murid-callista') || students[0] || null;
   }, [currentRole, currentUser, students]);
 
-  const switchStudent = (studentId: string) => {
-    const s = students.find(item => item.id === studentId);
-    if (s) {
-      const newUser: User = {
-        id: `user-${s.id}`,
-        username: s.username || s.nickname.toLowerCase(),
-        name: `${s.name} (Murid / Wali)`,
-        role: 'murid',
-        studentId: s.id,
-        email: `wali.${s.nickname.toLowerCase()}@gmail.com`,
-      };
-      setCurrentUser(newUser);
-      setCurrentRole('murid');
-      showToast(
-        'Akun Santri Aktif Diubah',
-        `Menampilkan portal ananda: ${s.name} (${s.className || 'Kelas'} - ${s.rombelName || 'Rombel'})`,
-        'success'
-      );
-      addLog(`Beralih profil santri: ${s.name} (${s.className})`, 'Autentikasi');
-    }
-  };
-
   // Auth methods
   const login = async (username: string, pass: string): Promise<boolean> => {
     try {
       const result = await api.login(username.trim(), pass);
       setCurrentUser(result.user);
       setCurrentRole(result.user.role);
+      try {
+        localStorage.setItem('tkq_session_user', JSON.stringify(result.user));
+      } catch {
+        // localStorage tidak tersedia, abaikan
+      }
       setActiveTab('dashboard');
       showToast('Berhasil Masuk', `Selamat datang kembali, ${result.user.name}!`, 'success');
       addLog(`Masuk ke sistem (${result.user.role.toUpperCase()})`, 'Autentikasi');
@@ -558,33 +489,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const logout = () => {
     const name = currentUser?.name;
     setCurrentUser(null);
+    try {
+      localStorage.removeItem('tkq_session_user');
+    } catch {
+      // localStorage tidak tersedia, abaikan
+    }
     showToast('Telah Keluar', 'Sesi Anda telah berakhir dengan aman.', 'info');
     if (name) addLog(`Keluar dari sistem`, 'Autentikasi');
-  };
-
-  const switchRole = (role: Role) => {
-    const targetUser = INITIAL_USERS.find(u => u.role === role) || {
-      id: `user-${role}`,
-      username: role,
-      name: role === 'admin'
-        ? 'Ustadzah Aminah, S.Kom (Tata Usaha)'
-        : role === 'guru'
-        ? 'Ibu Alfiyah Nurazizah (Wali Rombel Al Quddus)'
-        : 'Muhammad Arzan Al-Fatih (Anak / Wali)',
-      role,
-      teacherId: role === 'guru' ? 'guru-alfiyah' : undefined,
-    };
-    setCurrentUser(targetUser);
-    setCurrentRole(role);
-    setActiveTab('dashboard');
-    showToast('Role Berganti', `Sekarang Anda menjelajah sebagai: ${role.toUpperCase()}`, 'info');
-    addLog(`Beralih peran menjadi ${role.toUpperCase()}`, 'Sistem');
   };
 
   // Profile
   const updateSchoolProfile = (profile: SchoolProfile) => {
     setSchoolProfile(profile);
-    showToast('Profil Disimpan', 'Data profil TK Ceria Bangsa berhasil diperbarui.', 'success');
+    showToast('Profil Disimpan', 'Data profil TKQ Pro berhasil diperbarui.', 'success');
     addLog('Memperbarui Profil Lembaga TK', 'Profil TK');
   };
 
@@ -952,14 +869,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     addLog(`Menghapus TP: ${target?.code || id}`, 'Kurikulum');
   };
 
-  const resetCPTPToDefault = () => {
-    setLearningElements(INITIAL_LEARNING_ELEMENTS);
-    setCpList(INITIAL_CP_LIST);
-    setTpList(INITIAL_TP_LIST);
-    showToast('Reset Berhasil', 'Bank CP & TP dikembalikan ke standar awal Kemendikbud & APBQ.', 'success');
-    addLog('Mereset Bank CP & TP ke standar awal', 'Kurikulum');
-  };
-
   // Active Curriculum (Synthesized from Builder)
   const saveActiveCurriculum = (curriculum: ActiveCurriculum) => {
     setActiveCurriculum(curriculum);
@@ -1031,26 +940,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const deleteRPPMItem = (id: string) => {
     setRppmList(prev => prev.filter(r => r.id !== id));
     showToast('RPPM Dihapus', 'Rencana mingguan dihapus.', 'info');
-  };
-
-  const resetRPPMToAdminTemplate = (rppmId: string) => {
-    setRppmList(prev =>
-      prev.map(r => {
-        if (r.id === rppmId) {
-          return {
-            ...OFFICIAL_ADMIN_RPPM_TEMPLATE,
-            id: r.id,
-            week: r.week,
-            classId: r.classId,
-            className: r.className,
-            lastEditedByRole: 'guru',
-          };
-        }
-        return r;
-      })
-    );
-    showToast('Reset Berhasil', 'RPPM telah direset kembali sesuai Template Standar Resmi Admin/TU.', 'info');
-    addLog('Mereset RPPM ke Template Resmi Admin/TU', 'RPPM');
   };
 
   // Helper to build deep learning RPPH from RPPM Day Plan & Urutan Kegiatan
@@ -1784,7 +1673,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const resetUserPassword = (id: string, _tempPass: string) => {
     const user = users.find(u => u.id === id);
     if (user) {
-      addLog(`Mereset kata sandi pengguna @${user.username}`, 'Pengguna');
+      api.resetUserPassword(id, _tempPass)
+        .then(() => {
+          showToast('Password Direset', `Password akun ${user.username} berhasil diperbarui.`, 'success');
+          addLog(`Mereset kata sandi pengguna @${user.username}`, 'Pengguna');
+        })
+        .catch(error => {
+          showToast('Reset Password Gagal', error instanceof Error ? error.message : 'Terjadi kesalahan.', 'error');
+        });
     }
   };
 
@@ -1797,15 +1693,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setActiveTab,
         login,
         logout,
-        switchRole,
         currentTeacher,
         currentRombel,
         currentClass,
         accessibleStudents,
         accessibleRombels,
-        switchTeacher,
         currentStudent,
-        switchStudent,
         schoolProfile,
         updateSchoolProfile,
         teachers,
@@ -1852,7 +1745,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addTP,
         updateTP,
         deleteTP,
-        resetCPTPToDefault,
         activeCurriculum,
         saveActiveCurriculum,
         materialBank,
@@ -1868,7 +1760,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addRPPMItem,
         updateRPPMItem,
         deleteRPPMItem,
-        resetRPPMToAdminTemplate,
         rpphList,
         saveRPPH,
         deleteRPPH,

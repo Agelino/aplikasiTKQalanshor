@@ -29,7 +29,6 @@ export const StudentAttendanceView: React.FC = () => {
     currentUser,
     currentRole,
     currentStudent,
-    switchStudent,
     saveLeaveRequest,
     deleteAttendanceRecord,
     showToast,
@@ -183,21 +182,6 @@ export const StudentAttendanceView: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          {/* Quick student selector when multiple students exist */}
-          {students.length > 1 && (
-            <select
-              value={student.id}
-              onChange={e => switchStudent(e.target.value)}
-              className="px-3 py-2 text-xs font-bold bg-slate-50 border border-slate-200 rounded-xl text-slate-800 outline-none hover:border-emerald-400 transition-all cursor-pointer"
-              title="Ganti Ananda / Profil Santri"
-            >
-              {students.map(s => (
-                <option key={s.id} value={s.id}>
-                  {s.name} ({s.className || 'Kelas'})
-                </option>
-              ))}
-            </select>
-          )}
 
           <button
             onClick={handleOpenAddLeave}

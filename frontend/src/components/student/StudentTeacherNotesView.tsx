@@ -26,7 +26,6 @@ export const StudentTeacherNotesView: React.FC = () => {
     students,
     currentUser,
     currentStudent,
-    switchStudent,
     teacherNotes,
     markTeacherNoteAsRead,
     replyTeacherNoteByParent,
@@ -126,22 +125,6 @@ export const StudentTeacherNotesView: React.FC = () => {
                 Catatan Khusus dari Guru Kelas
               </span>
 
-              {students.length > 1 && (
-                <div className="inline-flex items-center gap-1.5 bg-black/30 px-2.5 py-1 rounded-full border border-white/20 text-xs">
-                  <span className="text-emerald-200 text-[11px]">Profil Santri:</span>
-                  <select
-                    value={student?.id}
-                    onChange={e => switchStudent(e.target.value)}
-                    className="bg-transparent text-white font-bold outline-none cursor-pointer"
-                  >
-                    {students.map(s => (
-                      <option key={s.id} value={s.id} className="text-slate-900 font-medium">
-                        {s.name} ({s.className || 'Kelas'})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
             </div>
 
             <h1 className="text-xl md:text-2xl font-extrabold tracking-tight">

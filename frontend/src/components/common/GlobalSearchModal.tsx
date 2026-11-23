@@ -215,7 +215,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, on
         <div className="max-h-96 overflow-y-auto p-2">
           {query.trim() === '' ? (
             <div className="py-10 text-center text-slate-400 text-xs">
-              Ketik kata kunci untuk mencari data di seluruh modul SIM TK Ceria Bangsa
+              Ketik kata kunci untuk mencari data di seluruh modul TKQ Pro
             </div>
           ) : searchResults.length === 0 ? (
             <div className="py-10 text-center text-slate-400 text-xs">

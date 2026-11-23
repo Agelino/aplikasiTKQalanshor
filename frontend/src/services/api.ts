@@ -78,4 +78,9 @@ export const api = {
     request<Student>(`/students/${encodeURIComponent(student.id)}`, { method: 'PUT', body: JSON.stringify(student) }),
   deleteStudent: (id: string) =>
     request<void>(`/students/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+  resetUserPassword: (id: string, password: string) =>
+    request<{ success: boolean }>(`/users/${encodeURIComponent(id)}/password`, {
+      method: 'PUT',
+      body: JSON.stringify({ password }),
+    }),
 };

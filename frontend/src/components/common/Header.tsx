@@ -25,7 +25,6 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileSidebar }) => {
   const {
     currentUser,
     currentRole,
-    switchRole,
     logout,
     notifications,
     markNotificationRead,
@@ -35,24 +34,16 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileSidebar }) => {
     currentRombel,
     currentClass,
     accessibleStudents,
-    teachers,
-    rombels,
-    switchTeacher,
     currentStudent,
-    switchStudent,
     students,
   } = useApp();
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [isTeacherMenuOpen, setIsTeacherMenuOpen] = useState(false);
-  const [isStudentMenuOpen, setIsStudentMenuOpen] = useState(false);
 
   const notifRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const teacherMenuRef = useRef<HTMLDivElement>(null);
-  const studentMenuRef = useRef<HTMLDivElement>(null);
 
   const unreadNotifCount = notifications.filter(n => !n.read).length;
 
@@ -64,12 +55,6 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileSidebar }) => {
       }
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
         setIsUserMenuOpen(false);
-      }
-      if (teacherMenuRef.current && !teacherMenuRef.current.contains(event.target as Node)) {
-        setIsTeacherMenuOpen(false);
-      }
-      if (studentMenuRef.current && !studentMenuRef.current.contains(event.target as Node)) {
-        setIsStudentMenuOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -138,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileSidebar }) => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-4 md:px-6 bg-white/95 backdrop-blur-md border-b border-slate-200">
+      <header className="sticky top-0 z-30 flex items-center justify-between h-16 md:h-[76px] px-4 md:px-6 bg-white border-b border-[#E2E8F0]">
         {/* Left Zone: Hamburger + Breadcrumb */}
         <div className="flex items-center gap-3 min-w-0">
           <button
@@ -151,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileSidebar }) => {
 
           <div className="flex items-center gap-2 min-w-0">
             <span className="hidden sm:inline-block text-xs font-medium text-slate-400">
-              SIM TK Ceria Bangsa
+              TKQ Pro
             </span>
             <span className="hidden sm:inline-block text-slate-300">/</span>
             <h1 className="text-sm md:text-base font-semibold text-slate-800 truncate">
@@ -160,12 +145,12 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileSidebar }) => {
           </div>
         </div>
 
-        {/* Center/Right Zone: Universal Search trigger + Role Switcher Demo Bar + Actions */}
+        {/* Center/Right Zone: Universal Search + Actions */}
         <div className="flex items-center gap-2 md:gap-3">
           {/* Universal Search Button */}
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100/80 hover:bg-slate-100 text-slate-500 hover:text-slate-800 border border-slate-200/60 transition-colors text-xs font-medium"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#F7F9FC] hover:bg-slate-100 text-slate-500 hover:text-slate-800 border border-[#E2E8F0] transition-colors text-xs font-medium"
             title="Cari data (Ctrl+K)"
           >
             <Search className="w-3.5 h-3.5" />
@@ -175,90 +160,19 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileSidebar }) => {
             </kbd>
           </button>
 
-          {/* Role Switcher (Crucial for live prototype presentation!) */}
-          <div className="hidden sm:flex items-center p-1 rounded-xl bg-slate-100/90 border border-slate-200/60 gap-0.5">
-            <span className="text-[11px] font-medium text-slate-400 px-2 select-none">
-              Peran:
-            </span>
-            {(['admin', 'guru', 'murid'] as Role[]).map(role => (
-              <button
-                key={role}
-                onClick={() => switchRole(role)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-semibold capitalize transition-all ${
-                  currentRole === role
-                    ? 'bg-white text-emerald-800 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50'
-                }`}
-              >
-                {role === 'admin' ? 'Admin / TU' : role === 'guru' ? 'Guru' : 'Murid'}
-              </button>
-            ))}
-          </div>
-
-          {/* Active Teacher & Rombel Switcher (Exclusive for Guru mode) */}
+          {/* Active Teacher & Rombel (read-only for the logged-in account) */}
           {currentRole === 'guru' && (
-            <div className="relative" ref={teacherMenuRef}>
-              <button
-                onClick={() => setIsTeacherMenuOpen(!isTeacherMenuOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold hover:bg-emerald-100/70 transition-colors shadow-xs"
-                title="Ganti Guru / Rombel untuk simulasi"
-              >
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
                 <School className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <span className="max-w-[130px] sm:max-w-[170px] truncate">
                   {currentRombel ? `${currentRombel.name} (${currentClass?.code || 'Kelas'})` : currentTeacher?.name}
                 </span>
-                <ChevronDown className="w-3 h-3 text-emerald-600 shrink-0" />
-              </button>
-
-              {isTeacherMenuOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 p-2.5">
-                  <div className="px-2 py-1.5 border-b border-slate-100">
-                    <p className="text-xs font-bold text-slate-800">Pilih Guru & Rombel Binaan</p>
-                    <p className="text-[10px] text-slate-500">
-                      Data murid, presensi & penilaian akan otomatis disaring sesuai rombel guru yang dipilih.
-                    </p>
-                  </div>
-                  <div className="max-h-64 overflow-y-auto space-y-1 pt-1.5">
-                    {teachers.map(t => {
-                      const r = rombels.find(rom => rom.teacherId === t.id);
-                      const isCurrent = currentTeacher?.id === t.id;
-                      return (
-                        <button
-                          key={t.id}
-                          onClick={() => {
-                            switchTeacher(t.id);
-                            setIsTeacherMenuOpen(false);
-                          }}
-                          className={`w-full text-left p-2 rounded-xl text-xs transition-colors flex items-center justify-between ${
-                            isCurrent
-                              ? 'bg-emerald-50 text-emerald-900 border border-emerald-300 font-semibold'
-                              : 'hover:bg-slate-50 text-slate-700'
-                          }`}
-                        >
-                          <div className="min-w-0 pr-2">
-                            <p className="truncate font-semibold">{t.name}</p>
-                            <p className="text-[11px] text-emerald-700 truncate">
-                              {r ? `${r.fullName} · ${r.className}` : t.position}
-                            </p>
-                          </div>
-                          {isCurrent && <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
-          {/* Active Student Badge & Switcher for Murid Role */}
+          {/* Active Student Badge for Murid Role */}
           {currentRole === 'murid' && currentStudent && (
-            <div className="relative" ref={studentMenuRef}>
-              <button
-                onClick={() => setIsStudentMenuOpen(!isStudentMenuOpen)}
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200/90 text-teal-900 text-xs font-bold hover:shadow-xs transition-all cursor-pointer"
-                title="Profil Santri Aktif & Pengaturan Ananda"
-              >
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-[10px] bg-[#ECFDF5] border border-[#059669]/25 text-[#0b6b51] text-xs font-semibold">
                 <div className={`w-5 h-5 rounded-lg ${currentStudent.avatarColor || 'bg-teal-600'} text-white text-[10px] flex items-center justify-center font-black`}>
                   {currentStudent.name.charAt(0)}
                 </div>
@@ -270,46 +184,6 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileSidebar }) => {
                     {currentStudent.className || 'Kelas'} · {currentStudent.rombelName || 'Rombel'}
                   </span>
                 </div>
-                <ChevronDown className="w-3 h-3 text-teal-600 shrink-0" />
-              </button>
-
-              {isStudentMenuOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 p-2.5">
-                  <div className="px-2 py-1.5 border-b border-slate-100">
-                    <p className="text-xs font-bold text-slate-800">Pilih Santri / Ananda</p>
-                    <p className="text-[10px] text-slate-500">
-                      Beralih akun wali murid untuk melihat data perkembangan ananda.
-                    </p>
-                  </div>
-                  <div className="max-h-64 overflow-y-auto space-y-1 pt-1.5">
-                    {students.slice(0, 12).map(s => {
-                      const isCurrent = currentStudent?.id === s.id;
-                      return (
-                        <button
-                          key={s.id}
-                          onClick={() => {
-                            switchStudent(s.id);
-                            setIsStudentMenuOpen(false);
-                          }}
-                          className={`w-full text-left p-2 rounded-xl text-xs transition-colors flex items-center justify-between ${
-                            isCurrent
-                              ? 'bg-teal-50 text-teal-900 border border-teal-300 font-semibold'
-                              : 'hover:bg-slate-50 text-slate-700'
-                          }`}
-                        >
-                          <div className="min-w-0 pr-2">
-                            <p className="truncate font-semibold">{s.name}</p>
-                            <p className="text-[11px] text-teal-700 truncate">
-                              {s.className || 'Kelas'} · {s.rombelName || 'Rombel'} · NIS: {s.nis}
-                            </p>
-                          </div>
-                          {isCurrent && <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
@@ -381,7 +255,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleMobileSidebar }) => {
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
               className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-100 transition-colors text-left"
             >
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-bold text-xs flex items-center justify-center shadow-xs">
+              <div className="w-8 h-8 rounded-lg bg-[#059669] text-white font-semibold text-xs flex items-center justify-center">
                 {currentUser?.name.charAt(0) || 'U'}
               </div>
               <div className="hidden xl:block min-w-0">

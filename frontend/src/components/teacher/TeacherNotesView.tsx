@@ -47,7 +47,6 @@ export const TeacherNotesView: React.FC = () => {
     addTeacherNote,
     updateTeacherNote,
     deleteTeacherNote,
-    switchStudent,
     setActiveTab,
     showToast,
   } = useApp();
@@ -305,12 +304,6 @@ export const TeacherNotesView: React.FC = () => {
     }
 
     setIsFormOpen(false);
-  };
-
-  // Switch preview to student portal to verify realization
-  const handleTestAsStudent = (studentId: string) => {
-    switchStudent(studentId);
-    setActiveTab('catatan_guru_anak');
   };
 
   const getPriorityStyle = (priority: TeacherNotePriority) => {
@@ -701,16 +694,6 @@ export const TeacherNotesView: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Test as Student Button */}
-                    <button
-                      onClick={() => handleTestAsStudent(note.studentId)}
-                      title="Lihat bagaimana catatan ini tampil di akun portal murid/wali"
-                      className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-800 bg-white px-2.5 py-1 rounded-lg border border-emerald-200 shadow-2xs hover:bg-emerald-50 transition-all cursor-pointer"
-                    >
-                      <Eye className="w-3 h-3" />
-                      <span>Cek di Portal Murid</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </button>
                   </div>
 
                   {/* Parent Reply (if any) */}
@@ -1104,7 +1087,7 @@ export const TeacherNotesView: React.FC = () => {
             <div className="border-b-2 border-slate-900 pb-4 flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-black text-slate-900">LEMBAR CATATAN PRIBADI SANTRI</h2>
-                <p className="text-xs text-slate-600">TK Ceria Bangsa · Tahun Ajaran 2026/2027</p>
+                <p className="text-xs text-slate-600">TKQ Pro · Tahun Ajaran 2026/2027</p>
               </div>
               <span className="text-xs font-mono font-bold px-3 py-1 bg-slate-100 rounded-lg">
                 NO: {printNote.id.toUpperCase()}

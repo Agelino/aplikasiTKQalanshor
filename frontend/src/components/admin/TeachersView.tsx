@@ -147,9 +147,9 @@ export const TeachersView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 bg-white rounded-2xl border border-slate-200/80 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 bg-white rounded-[14px] border border-[#E7ECF2]">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-bold text-lg">
+          <div className="w-12 h-12 rounded-xl bg-[#F7F9FC] text-[#009B72] border border-[#E7ECF2] flex items-center justify-center font-bold text-lg">
             <Users className="w-6 h-6" />
           </div>
           <div>
@@ -160,7 +160,7 @@ export const TeachersView: React.FC = () => {
 
         <button
           onClick={handleOpenAdd}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-sm transition-all self-start sm:self-auto"
+          className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[#009B72] hover:bg-[#087F60] text-white font-semibold text-sm transition-colors self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           <span>Tambah Guru Baru</span>

@@ -27,7 +27,6 @@ export const StudentPortalView: React.FC = () => {
     students,
     currentUser,
     currentStudent,
-    switchStudent,
     setActiveTab,
     announcements,
     attendanceList,
@@ -69,38 +68,22 @@ export const StudentPortalView: React.FC = () => {
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       {/* Welcome Banner */}
-      <div className="p-6 md:p-8 rounded-3xl bg-gradient-to-r from-emerald-700 via-teal-700 to-slate-900 text-white shadow-md relative overflow-hidden">
+      <div className="surface-card p-6 md:p-8 border-l-4 border-l-[#009B72] relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-200 text-xs font-semibold border border-emerald-400/30">
-                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-50 text-[#009B72] text-xs font-semibold border border-emerald-200">
+                <Sparkles className="w-3.5 h-3.5" />
                 Portal Informasi Wali Murid & Ananda
               </span>
-              {students.length > 1 && (
-                <div className="inline-flex items-center gap-1.5 bg-black/25 px-2.5 py-1 rounded-full border border-white/15 text-xs">
-                  <span className="text-emerald-200 text-[11px]">Ganti Profil:</span>
-                  <select
-                    value={student?.id}
-                    onChange={e => switchStudent(e.target.value)}
-                    className="bg-transparent text-white font-bold outline-none cursor-pointer"
-                  >
-                    {students.map(s => (
-                      <option key={s.id} value={s.id} className="text-slate-900 font-medium">
-                        {s.name} ({s.className || 'Kelas'})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
             </div>
 
-            <h1 className="text-xl md:text-3xl font-extrabold tracking-tight">
+            <h1 className="text-xl md:text-3xl font-bold tracking-tight text-[#172338]">
               Assalamu&apos;alaikum, Ananda {student ? student.name : 'Santri Ceria'}! 👋
             </h1>
 
-            <p className="text-xs md:text-sm text-emerald-100/90 max-w-xl leading-relaxed">
-              Santri <span className="font-bold text-white">{student?.rombelName || 'Rombel'}</span> ({student?.className || 'Kelas'}) · NIS: <span className="font-mono font-semibold text-white">{student?.nis || '-'}</span> · Wali: <span className="font-semibold text-white">{student?.rombelTeacherName || 'Dewan Guru'}</span>.
+            <p className="text-xs md:text-sm text-[#718096] max-w-xl leading-relaxed">
+              Santri <span className="font-semibold text-[#172338]">{student?.rombelName || 'Rombel'}</span> ({student?.className || 'Kelas'}) · NIS: <span className="font-mono font-semibold text-[#172338]">{student?.nis || '-'}</span> · Wali: <span className="font-semibold text-[#172338]">{student?.rombelTeacherName || 'Dewan Guru'}</span>.
             </p>
 
             <div className="flex flex-wrap items-center gap-2 pt-2">
@@ -113,14 +96,14 @@ export const StudentPortalView: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTab('rapat_online')}
-                className="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold text-xs backdrop-blur-md transition-all border border-white/20 flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-white hover:bg-[#F7F9FC] text-[#172338] font-semibold text-xs transition-colors border border-[#E7ECF2] flex items-center gap-1.5 cursor-pointer"
               >
                 <Video className="w-3.5 h-3.5 text-emerald-300" />
                 <span>Rapat Online Rombel</span>
               </button>
               <button
                 onClick={() => setActiveTab('forum_rombel')}
-                className="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold text-xs backdrop-blur-md transition-all border border-white/20 flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-white hover:bg-[#F7F9FC] text-[#172338] font-semibold text-xs transition-colors border border-[#E7ECF2] flex items-center gap-1.5 cursor-pointer"
               >
                 <MessageSquare className="w-3.5 h-3.5 text-teal-300" />
                 <span>Forum Diskusi</span>
@@ -128,22 +111,22 @@ export const StudentPortalView: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-center shrink-0 w-full md:w-auto">
-            <span className="text-[10px] text-emerald-200 uppercase font-semibold block">Status Kehadiran Hari Ini</span>
+          <div className="bg-[#F7F9FC] p-4 rounded-xl border border-[#E7ECF2] text-center shrink-0 w-full md:w-auto">
+            <span className="text-[10px] text-[#718096] uppercase font-semibold block">Status Kehadiran Hari Ini</span>
             <div className="flex items-center justify-center gap-2 mt-1">
               <span className={`w-3 h-3 rounded-full ${todayRecord?.status === 'Izin' || todayRecord?.status === 'Sakit' ? 'bg-amber-400' : 'bg-emerald-400'} animate-pulse`} />
-              <span className="text-base font-bold text-white">
+              <span className="text-base font-bold text-[#172338]">
                 {todayRecord ? (todayRecord.status === 'Hadir' ? 'Hadir di Sekolah' : `Status: ${todayRecord.status}`) : 'Hadir di Sekolah'}
               </span>
             </div>
-            <span className="text-[11px] text-emerald-200/90 font-mono mt-0.5 block">Jam Masuk KBM: 07.25 WIB</span>
+            <span className="text-[11px] text-[#718096] font-mono mt-0.5 block">Jam Masuk KBM: 07.25 WIB</span>
           </div>
         </div>
       </div>
 
       {/* Alert Banner for Teacher Personal Notes */}
       {unreadNotes.length > 0 && (
-        <div className="p-4 rounded-3xl bg-gradient-to-r from-amber-500/15 via-rose-500/10 to-amber-500/10 border-2 border-amber-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm animate-in fade-in">
+        <div className="surface-card p-4 border-l-4 border-l-amber-500 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in">
           <div className="flex items-start sm:items-center gap-3.5">
             <div className="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-bold shrink-0 shadow-xs animate-bounce">
               <HeartHandshake className="w-6 h-6" />
@@ -174,10 +157,8 @@ export const StudentPortalView: React.FC = () => {
 
       {/* Rombel Online Meeting Banner (Join Only for Student) */}
       {studentRombelMeeting && (
-        <div className={`p-4 rounded-3xl border-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm animate-in fade-in transition-all ${
-          isLiveMeetingNow
-            ? 'bg-gradient-to-r from-rose-500/15 via-red-500/10 to-rose-500/15 border-rose-400'
-            : 'bg-gradient-to-r from-teal-500/15 via-emerald-500/10 to-teal-500/15 border-teal-300'
+        <div className={`surface-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in transition-all ${
+          isLiveMeetingNow ? 'border-l-4 border-l-rose-500' : 'border-l-4 border-l-[#009B72]'
         }`}>
           <div className="flex items-start sm:items-center gap-3.5">
             <div className={`w-11 h-11 rounded-2xl flex items-center justify-center font-bold shrink-0 shadow-xs ${

@@ -5,21 +5,14 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
-  Plus,
-  Trash2,
   Clock,
-  MapPin,
   Sparkles,
-  Info,
-  CheckCircle2,
-  X,
   Printer,
   Calendar as CalendarIcon,
   Filter,
   Layers,
   Award,
   AlertCircle,
-  Edit2,
 } from 'lucide-react';
 
 interface KaldikMonth {
@@ -48,12 +41,8 @@ const DAY_NAMES = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
 
 export const KalenderAkademikRealView: React.FC = () => {
   const {
-    currentRole,
     calendarEvents,
-    addCalendarEvent,
-    deleteCalendarEvent,
     schoolProfile,
-    showToast,
   } = useApp();
 
   // Active month selector (default: September 2026 or current)
@@ -66,18 +55,9 @@ export const KalenderAkademikRealView: React.FC = () => {
   // Filter type
   const [filterType, setFilterType] = useState<string>('all');
 
-  // Modal tambah/edit kegiatan kaldik (Admin only)
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [formDate, setFormDate] = useState(selectedDateStr);
-  const [formEndDate, setFormEndDate] = useState(selectedDateStr);
-  const [formTitle, setFormTitle] = useState('');
-  const [formType, setFormType] = useState<CalendarEvent['type']>('school_event');
-  const [formDescription, setFormDescription] = useState('');
-  const [formColor, setFormColor] = useState('teal');
-
-  // Extended events with default official holidays & kaldik benchmarks
+  // The Kaldik is read-only and loaded from the official seeded calendar.
   const allEvents = useMemo(() => {
-    return calendarEvents;
+    return calendarEvents.filter(event => event.id.startsWith('kaldik-'));
   }, [calendarEvents]);
 
   // Filtered events
@@ -185,44 +165,6 @@ export const KalenderAkademikRealView: React.FC = () => {
     setSelectedMonthIdx(prev => (prev < MONTHS_ACADEMIC_YEAR.length - 1 ? prev + 1 : 0));
   };
 
-  const handleOpenAddModal = (dateStr?: string) => {
-    const targetDate = dateStr || selectedDateStr;
-    setFormDate(targetDate);
-    setFormEndDate(targetDate);
-    setFormTitle('');
-    setFormType('school_event');
-    setFormDescription('');
-    setFormColor('teal');
-    setIsAddModalOpen(true);
-  };
-
-  const handleSaveEvent = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formTitle.trim()) {
-      showToast('Judul kegiatan wajib diisi', '', 'error');
-      return;
-    }
-
-    addCalendarEvent({
-      title: formTitle.trim(),
-      date: formDate,
-      endDate: formEndDate >= formDate ? formEndDate : formDate,
-      type: formType,
-      description: formDescription.trim(),
-      color: formColor,
-    });
-
-    setIsAddModalOpen(false);
-    showToast('Kegiatan Berhasil Ditambahkan', `Agenda telah dicatat ke Kalender Akademik.`, 'success');
-  };
-
-  const handleDeleteEvent = (id: string, title: string) => {
-    if (window.confirm(`Hapus kegiatan "${title}" dari kalender akademik?`)) {
-      deleteCalendarEvent(id);
-      showToast('Kegiatan Dihapus', `Agenda "${title}" telah dihapus.`, 'info');
-    }
-  };
-
   // Color mapper helper
   const getEventBadgeStyle = (type: CalendarEvent['type']) => {
     switch (type) {
@@ -262,7 +204,7 @@ export const KalenderAkademikRealView: React.FC = () => {
               </span>
             </div>
             <p className="text-xs text-slate-500">
-              Visual matriks kalender tanggal, hari efektif pembelajaran, libur nasional, dan agenda TK Ceria Bangsa
+              Visual matriks kalender tanggal, hari efektif pembelajaran, libur nasional, dan agenda TKQ Pro
             </p>
           </div>
         </div>
@@ -297,23 +239,9 @@ export const KalenderAkademikRealView: React.FC = () => {
             </button>
           </div>
 
-          {/* Admin only Add Button */}
-          {currentRole === 'admin' && (
-            <button
-              onClick={() => handleOpenAddModal()}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-sm transition-all cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Tambah Agenda Kaldik</span>
-            </button>
-          )}
-
-          {/* Guru/Siswa Read-only indicator */}
-          {currentRole !== 'admin' && (
-            <span className="text-xs text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
-              Mode Lihat (Hanya Baca)
-            </span>
-          )}
+          <span className="text-xs text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
+            Kalender Pemerintah (Hanya Baca)
+          </span>
 
           <button
             onClick={() => window.print()}
@@ -507,15 +435,6 @@ export const KalenderAkademikRealView: React.FC = () => {
                   <CalendarDays className="w-8 h-8 mx-auto mb-2 opacity-40 text-slate-300" />
                   <p className="text-xs font-medium">Tidak ada kegiatan terjadwal pada tanggal ini.</p>
                   <p className="text-[11px] text-slate-400 mt-1">Hari belajar dan bermain efektif reguler.</p>
-                  {currentRole === 'admin' && (
-                    <button
-                      onClick={() => handleOpenAddModal(selectedDateStr)}
-                      className="mt-3 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-semibold hover:bg-emerald-100 transition-all cursor-pointer"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Jadwalkan Agenda</span>
-                    </button>
-                  )}
                 </div>
               ) : (
                 selectedDateEvents.map(event => (
@@ -537,15 +456,6 @@ export const KalenderAkademikRealView: React.FC = () => {
                           ? 'Rapor'
                           : 'Sekolah'}
                       </span>
-                      {currentRole === 'admin' && (
-                        <button
-                          onClick={() => handleDeleteEvent(event.id, event.title)}
-                          className="text-slate-400 hover:text-rose-600 p-1 rounded-md transition-colors cursor-pointer"
-                          title="Hapus Agenda"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      )}
                     </div>
 
                     <h5 className="text-xs font-bold text-slate-900 leading-snug">
@@ -567,15 +477,6 @@ export const KalenderAkademikRealView: React.FC = () => {
               )}
             </div>
 
-            {currentRole === 'admin' && selectedDateEvents.length > 0 && (
-              <button
-                onClick={() => handleOpenAddModal(selectedDateStr)}
-                className="w-full mt-4 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border border-dashed border-emerald-300 text-emerald-700 text-xs font-semibold hover:bg-emerald-50 transition-all cursor-pointer"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Tambah Agenda Tanggal Ini</span>
-              </button>
-            )}
           </div>
 
           {/* Quick Academic Summary Card */}
@@ -596,122 +497,6 @@ export const KalenderAkademikRealView: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal Tambah Agenda Kaldik (Admin Only) */}
-      {isAddModalOpen && currentRole === 'admin' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full border border-slate-200 shadow-2xl overflow-hidden">
-            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
-                  <Plus className="w-4 h-4" />
-                </div>
-                <h3 className="text-sm font-bold text-slate-800">
-                  Tambah Agenda Kalender Akademik
-                </h3>
-              </div>
-              <button
-                onClick={() => setIsAddModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200/60"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSaveEvent} className="p-5 space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Judul Kegiatan / Peristiwa <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Contoh: Peringatan Hari Kartini Cilik"
-                  value={formTitle}
-                  onChange={e => setFormTitle(e.target.value)}
-                  className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Tanggal Mulai
-                  </label>
-                  <input
-                    type="date"
-                    required
-                    value={formDate}
-                    onChange={e => {
-                      setFormDate(e.target.value);
-                      if (formEndDate < e.target.value) setFormEndDate(e.target.value);
-                    }}
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Tanggal Selesai
-                  </label>
-                  <input
-                    type="date"
-                    required
-                    value={formEndDate}
-                    onChange={e => setFormEndDate(e.target.value)}
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Kategori Agenda
-                </label>
-                <select
-                  value={formType}
-                  onChange={e => setFormType(e.target.value as CalendarEvent['type'])}
-                  className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-                >
-                  <option value="school_event">Agenda Kegiatan Sekolah</option>
-                  <option value="tk_event">Kegiatan Unggulan TK (Lomba/Pentas/Manasik)</option>
-                  <option value="holiday">Hari Libur Nasional / Cuti Bersama</option>
-                  <option value="semester_start">Awal Semester / MPLS</option>
-                  <option value="report_distribution">Pembagian Buku Rapor</option>
-                  <option value="effective">Hari Belajar Efektif</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Keterangan / Deskripsi
-                </label>
-                <textarea
-                  rows={3}
-                  placeholder="Tambahkan detail informasi agenda ini..."
-                  value={formDescription}
-                  onChange={e => setFormDescription(e.target.value)}
-                  className="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-all cursor-pointer"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all cursor-pointer shadow-sm"
-                >
-                  Simpan ke Kaldik
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

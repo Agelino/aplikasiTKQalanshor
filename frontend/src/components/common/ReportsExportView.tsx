@@ -15,7 +15,7 @@ export const ReportsExportView: React.FC = () => {
     },
     {
       title: 'Dokumen KOSP (Kurikulum Aktif Lembaga)',
-      desc: 'Naskah integrasi Kurikulum Merdeka PAUD dan muatan khas keislaman TKQ Ceria Bangsa tahun berjalan.',
+      desc: 'Naskah integrasi Kurikulum Merdeka PAUD dan muatan khas keislaman TKQ Pro tahun berjalan.',
       icon: BookOpen,
       badge: 'Kurikulum',
       actionTab: 'kurikulum_aktif',

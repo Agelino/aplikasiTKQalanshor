@@ -5,7 +5,7 @@ import { AssessmentScore } from '../../types';
 import { StarDisplay, merdekaScoreToStars } from '../common/StarRating';
 
 export const StudentAssessmentsView: React.FC = () => {
-  const { students, assessmentList, currentUser, currentStudent, switchStudent, setActiveTab } = useApp();
+  const { students, assessmentList, currentUser, currentStudent, setActiveTab } = useApp();
 
   const student = currentStudent || students.find(s => s.id === currentUser?.studentId) || students[0];
   const records = assessmentList.filter(a => a.studentId === student?.id);

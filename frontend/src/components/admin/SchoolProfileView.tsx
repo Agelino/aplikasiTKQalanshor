@@ -31,7 +31,7 @@ export const SchoolProfileView: React.FC = () => {
           </div>
           <div>
             <h2 className="text-base font-bold text-slate-900">Edit Profil Lembaga</h2>
-            <p className="text-xs text-slate-500">Pengaturan identitas resmi, NPSN, kontak, alamat, dan pimpinan TK Ceria Bangsa</p>
+            <p className="text-xs text-slate-500">Pengaturan identitas resmi, NPSN, kontak, alamat, dan pimpinan TKQ Pro</p>
           </div>
         </div>
 

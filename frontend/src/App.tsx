@@ -224,7 +224,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="app-shell flex h-screen overflow-hidden">
       {/* Toast Notification Layer */}
       <ToastContainer />
 
@@ -239,12 +239,12 @@ const AppContent: React.FC = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top Navigation Bar with Quick Role Switcher */}
+        {/* Top Navigation Bar */}
         <Header onToggleMobileSidebar={() => setMobileSidebarOpen(prev => !prev)} />
 
         {/* Scrollable Viewport */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto pb-12">
+        <main className="app-main flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <div className="max-w-[1440px] mx-auto pb-12">
             {renderActiveView()}
           </div>
         </main>

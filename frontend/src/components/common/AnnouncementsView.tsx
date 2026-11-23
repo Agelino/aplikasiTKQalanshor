@@ -12,7 +12,7 @@ export const AnnouncementsView: React.FC = () => {
     content: '',
     date: '2026-09-08',
     targetRole: 'Semua',
-    author: 'Tata Usaha TK Ceria Bangsa',
+    author: 'Tata Usaha TKQ Pro',
     priority: 'normal',
   });
 
@@ -25,7 +25,7 @@ export const AnnouncementsView: React.FC = () => {
       content: '',
       date: '2026-09-08',
       targetRole: 'Semua',
-      author: 'Tata Usaha TK Ceria Bangsa',
+      author: 'Tata Usaha TKQ Pro',
       priority: 'normal',
     });
   };
@@ -47,7 +47,7 @@ export const AnnouncementsView: React.FC = () => {
           <div>
             <h2 className="text-base font-bold text-slate-900">Papan Pengumuman Resmi Lembaga</h2>
             <p className="text-xs text-slate-500">
-              Informasi kegiatan, imbauan akademik, dan edaran wali murid TK Ceria Bangsa
+              Informasi kegiatan, imbauan akademik, dan edaran wali murid TKQ Pro
             </p>
           </div>
         </div>

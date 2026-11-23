@@ -23,4 +23,5 @@ Route::prefix('v1')->group(function () {
     Route::post('/students', [SchoolDataController::class, 'storeStudent']);
     Route::put('/students/{student}', [SchoolDataController::class, 'updateStudent']);
     Route::delete('/students/{student}', [SchoolDataController::class, 'destroyStudent']);
+    Route::put('/users/{id}/password', [SchoolDataController::class, 'resetUserPassword']);
 });

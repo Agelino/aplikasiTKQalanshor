@@ -208,7 +208,7 @@ export const CalendarView: React.FC = () => {
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Jadwal pelaksanaan program kerja satuan PAUD TK Ceria Bangsa, timeline kegiatan berlangsung, agenda mendatang, dan monitoring ketercapaian program.
+              Jadwal pelaksanaan program kerja satuan PAUD TKQ Pro, timeline kegiatan berlangsung, agenda mendatang, dan monitoring ketercapaian program.
             </p>
           </div>
         </div>

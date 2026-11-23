@@ -54,6 +54,8 @@ class SchoolDataController extends Controller
             ]);
         }
 
+        $this->syncAuthenticationTables($resource, $data['items']);
+
         return $this->resource($resource);
     }
 
@@ -247,6 +249,118 @@ class SchoolDataController extends Controller
     {
         $student->delete();
         return response()->json(status: 204);
+    }
+
+    public function resetUserPassword(Request $request, string $id): JsonResponse
+    {
+        $data = $request->validate([
+            'password' => ['required', 'string', 'min:6'],
+        ]);
+
+        $user = \App\Models\User::query()
+            ->when(is_numeric($id), fn ($query) => $query->whereKey((int) $id))
+            ->when(! is_numeric($id), function ($query) use ($id) {
+                $username = str_starts_with($id, 'user-') ? substr($id, 5) : $id;
+                $query->where('username', $username);
+            })
+            ->first();
+
+        abort_if(! $user, 404, 'Akun pengguna tidak ditemukan.');
+        $user->update(['password' => Hash::make($data['password'])]);
+
+        return response()->json(['success' => true]);
+    }
+
+    private function syncAuthenticationTables(string $resource, array $items): void
+    {
+        $ids = array_values(array_filter(array_map(
+            fn ($item) => is_array($item) && is_string($item['id'] ?? null) ? $item['id'] : null,
+            $items
+        )));
+
+        if ($resource === 'users') {
+            foreach ($items as $item) {
+                if (! is_array($item) || empty($item['username']) || empty($item['role'])) {
+                    continue;
+                }
+
+                $attributes = [
+                    'name' => $item['name'] ?? $item['username'],
+                    'email' => $item['email'] ?? $item['username'].'@tkqpro.sch.id',
+                    'role' => $item['role'],
+                    'teacher_id' => $item['teacherId'] ?? null,
+                    'student_id' => $item['studentId'] ?? null,
+                ];
+
+                $existing = \App\Models\User::query()->where('username', $item['username'])->first();
+                if ($existing) {
+                    $existing->update($attributes);
+                } else {
+                    \App\Models\User::create([
+                        ...$attributes,
+                        'username' => $item['username'],
+                        'password' => Hash::make('password'),
+                    ]);
+                }
+            }
+
+            $keepUsernames = array_values(array_filter(
+                array_map(
+                    fn ($item) => is_array($item) ? ($item['username'] ?? null) : null,
+                    $items
+                ),
+                fn ($username) => is_string($username)
+            ));
+            \App\Models\User::query()
+                ->whereNotIn('username', $keepUsernames)
+                ->delete();
+            return;
+        }
+
+        if ($resource === 'teachers') {
+            foreach ($items as $item) {
+                if (! is_array($item) || empty($item['id']) || empty($item['name'])) {
+                    continue;
+                }
+
+                Teacher::query()->updateOrCreate(['id' => $item['id']], [
+                    'name' => $item['name'],
+                    'username' => $item['username'] ?? strtolower(str_replace(' ', '_', $item['name'])),
+                    'email' => $item['email'] ?? null,
+                    'nip' => $item['nip'] ?? null,
+                    'status' => $item['status'] ?? 'Aktif',
+                    'profile' => collect($item)->except([
+                        'id', 'name', 'username', 'email', 'nip', 'status',
+                    ])->all(),
+                ]);
+            }
+
+            Teacher::query()->whereNotIn('id', $ids)->delete();
+            return;
+        }
+
+        if ($resource === 'students') {
+            foreach ($items as $item) {
+                if (! is_array($item) || empty($item['id']) || empty($item['name'])) {
+                    continue;
+                }
+
+                Student::query()->updateOrCreate(['id' => $item['id']], [
+                    'name' => $item['name'],
+                    'username' => $item['username'] ?? null,
+                    'nis' => $item['nis'] ?? null,
+                    'nisn' => $item['nisn'] ?? null,
+                    'status' => $item['status'] ?? 'Aktif',
+                    'class_id' => $item['classId'] ?? null,
+                    'rombel_id' => $item['rombelId'] ?? null,
+                    'profile' => collect($item)->except([
+                        'id', 'name', 'username', 'nis', 'nisn', 'status', 'classId', 'rombelId',
+                    ])->all(),
+                ]);
+            }
+
+            Student::query()->whereNotIn('id', $ids)->delete();
+        }
     }
 
     private function expand(object $model): array

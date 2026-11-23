@@ -33,7 +33,6 @@ export const CPTPManagementView: React.FC = () => {
     addTP,
     updateTP,
     deleteTP,
-    resetCPTPToDefault,
   } = useApp();
 
   const [activeTab, setActiveTab] = useState<'hierarchy' | 'cp' | 'tp'>('hierarchy');
@@ -261,21 +260,6 @@ export const CPTPManagementView: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={() => {
-              setConfirmModal({
-                type: 'reset',
-                title: 'Kembalikan Bank CP & TP ke Standar Awal?',
-                description: 'Seluruh penyesuaian akan direset kembali ke standar Kurikulum Merdeka Kemendikbud & Khas Bustanul Qur\'an.',
-              });
-            }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold text-xs transition-all cursor-pointer"
-            title="Kembalikan preset standar Kemendikbud & APBQ"
-          >
-            <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-            <span>Reset Standar</span>
-          </button>
-
           <button
             onClick={() => handleOpenAddCP()}
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-xs transition-all cursor-pointer"
@@ -1042,9 +1026,7 @@ export const CPTPManagementView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => {
-                  if (confirmModal.type === 'reset') {
-                    resetCPTPToDefault();
-                  } else if (confirmModal.type === 'cp' && confirmModal.id) {
+                  if (confirmModal.type === 'cp' && confirmModal.id) {
                     deleteCP(confirmModal.id);
                   } else if (confirmModal.type === 'tp' && confirmModal.id) {
                     deleteTP(confirmModal.id);

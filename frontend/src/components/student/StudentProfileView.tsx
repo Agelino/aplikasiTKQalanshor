@@ -28,7 +28,6 @@ export const StudentProfileView: React.FC = () => {
     currentUser,
     currentRole,
     currentStudent,
-    switchStudent,
     updateStudent,
     schoolProfile,
   } = useApp();
